@@ -24,7 +24,7 @@ def t_VARNAME(t):
 
 def t_error( t ):
     print("Invalid Token:",t.value[0])
-    t.lexer.skip( 1 )
+    t.lexer.skip(1)
 
 lexer = lex.lex()
 

@@ -1,33 +1,13 @@
-from hds_lexer import HDS_Lexer
 from hds_parser import HDS_Parser
 
 parser = HDS_Parser()
 
-input_file = open("input.show", "r")
-read = input_file.read()
+input_file = open("func.show", "r")
+input_string = input_file.read()
 input_file.close()
 
-res = parser.parse(read)
+python_code = parser.parse(input_string)
 
-def conserta_newlines (s):
-    print(s)
-    final = ''
-    indent_atual = 0
-    for c in s:
-        if c == '{':
-            indent_atual += 1
-        elif c == '}':
-            indent_atual -= 1
-        elif c == '\n':
-            final = final + '\n' + indent_atual * '\t'
-        else:
-            final = final + c
-
-    return final
-
-res = conserta_newlines(res)
-print(res)
-
-output_file = open("horadoshow.py", "w")
-output_file.write(res)
+output_file = open("func.py", "w")
+output_file.write(python_code)
 output_file.close()
