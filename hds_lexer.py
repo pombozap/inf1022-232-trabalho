@@ -13,9 +13,17 @@ class HDS_Lexer ():
         'ENQUANTO' : 'ENQUANTO',
         'FACA' : 'FACA',
         'FIM' : 'FIM',
+        'SE' : 'SE',
+        'SENAO' : 'SENAO',
+        'ENTAO' : 'ENTAO',
+        'ZERO' : 'ZERO',
+        'EXECUTE' : 'EXECUTE',
+        'VEZES' : 'VEZES',
+        'FIMEXE' : 'FIMEXE',
+        'ZERO' : 'ZERO',
     }
 
-    tokens = ('VARNAME','IGUAL','VIRGULA') + tuple(reserved.values())
+    tokens = ('VARNAME','IGUAL','VIRGULA', 'LPAR', 'RPAR', 'NUM', 'OPARIT', 'OPLOG') + tuple(reserved.values())
 
     t_ignore = ' \t\n'
 
@@ -24,13 +32,13 @@ class HDS_Lexer ():
         t.type = self.reserved.get(t.value,'VARNAME')
         return t
     
-    def t_IGUAL(self, t):
-        r'='
-        return t
-    
-    def t_VIRGULA(self, t):
-        r','
-        return t
+    t_IGUAL = r'='
+    t_VIRGULA = r','
+    t_LPAR = r'\('
+    t_RPAR = r'\)'
+    t_NUM = r'[0-9]+'
+    t_OPARIT = r'\+|\*|-|/'
+    t_OPLOG = r'>|<|>=|<='
 
     def t_error(self, t):
         print("Invalid Token:",t.value[0])

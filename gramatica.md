@@ -23,6 +23,3 @@ cmd&\rightarrow \text{ZERO}(varname)
 
 \end{align*}$$
 
-## Novos comandos:
-
-

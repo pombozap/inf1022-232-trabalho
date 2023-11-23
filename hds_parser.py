@@ -28,16 +28,57 @@ class HDS_Parser ():
         'cmds : cmd cmds'
         p[0] = p[1] + p[2]
 
+    def p_val_variavel (self, p):
+        'val : VARNAME'
+        p[0] = p[1]
+
+    def p_val_numero (self, p):
+        'val : NUM'
+        p[0] = p[1]
+        
+    def p_val_parenteses (self, p):
+        'val : LPAR val RPAR'
+        p[0] = '(%s)'%(p[2])
+        
+    def p_val_aritmetica (self, p):
+        'val : val OPARIT val'
+        p[0] = '%s %s %s'%(p[1], p[2], p[3])
+        
+    def p_condicao_valor (self, p):
+        'cond : val'
+        p[0] = p[1] + ' > 0'
+
+    def p_condicao_logica (self, p):
+        'cond : val OPLOG val'
+        p[0] = '%s %s %s'%(p[1], p[2], p[3])
+
     def p_cmd_while_loop (self, p):
-        'cmd : ENQUANTO VARNAME FACA cmds FIM'
-        p[0] = 'while %s > 0:{\n%s}\n'%(p[2], p[4])
+        'cmd : ENQUANTO cond FACA cmds FIM'
+        p[0] = 'while %s:{\n%s}\n'%(p[2], p[4])
+
+    def p_cmd_if_then (self, p):
+        'cmd : SE cond ENTAO cmds'
+        p[0] = 'if %s:{\n%s}\n'%(p[2], p[4])
+
+    def p_cmd_if_then_else (self, p):
+        'cmd : SE cond ENTAO cmds SENAO cmds'
+        p[0] = 'if %s:{\n%s}\nelse:{\n%s}\n'%(p[2], p[4], p[6])
+
+    def p_cmds_for_loop (self, p):
+        'cmd : EXECUTE NUM VEZES cmds FIMEXE'
+        p[0] = 'for EXECUTE in range(%s):{\n%s}\n'%(p[2], p[4])
+
+    def p_cmd_zero (self, p):
+        'cmd : ZERO LPAR VARNAME RPAR'
+        p[0] = '%s = 0\n'%(p[3])
 
     def p_cmd_atribuicao (self, p):
-        'cmd : VARNAME IGUAL VARNAME'
+        'cmd : VARNAME IGUAL val'
         p[0] = '%s = %s\n'%(p[1], p[3])
 
     def p_error(self, p):
         print("Erro de sintaxe no input!")
+        print(p)
 
     def gera_indentacao (self, codigo_sem_indentacao):
         codigo_python = ''
