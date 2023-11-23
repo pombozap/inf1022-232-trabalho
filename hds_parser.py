@@ -8,6 +8,7 @@ class HDS_Parser ():
 
     tokens = HDS_Lexer.tokens
 
+    ### REGRAS GRAMATICAIS ###
     def p_programa (self, p):
         'expr : RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOU'
         p[0] = 'def func(%s):{\n%s\nreturn %s}\n'%(p[2], p[6], p[4])
@@ -66,7 +67,7 @@ class HDS_Parser ():
 
     def p_cmds_for_loop (self, p):
         'cmd : EXECUTE NUM VEZES cmds FIMEXE'
-        p[0] = 'for EXECUTE in range(%s):{\n%s}\n'%(p[2], p[4])
+        p[0] = 'for EXECUTE in range(%s):{\n%s}\n'%(p[2], p[4]) # usa palavra reservada EXECUTE para garantir que não sobrescreve nenhuma variável
 
     def p_cmd_zero (self, p):
         'cmd : ZERO LPAR VARNAME RPAR'
@@ -76,10 +77,12 @@ class HDS_Parser ():
         'cmd : VARNAME IGUAL val'
         p[0] = '%s = %s\n'%(p[1], p[3])
 
+    ### TRATAMENTO DE ERRO ###
     def p_error(self, p):
         print("Erro de sintaxe no input!")
         print(p)
 
+    ### GERAÇÃO DE CÓDIGO PYTHON ###
     def gera_indentacao (self, codigo_sem_indentacao):
         codigo_python = ''
         indent = 0
@@ -96,6 +99,7 @@ class HDS_Parser ():
         
         return codigo_python
     
+    ### FUNÇÃO FINAL ###
     def parse(self, codigo_show):
         return self.gera_indentacao(self.parser.parse(codigo_show))
 

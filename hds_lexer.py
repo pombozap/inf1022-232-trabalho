@@ -5,6 +5,7 @@ class HDS_Lexer ():
         self.lexer = lex.lex(module=self)
         self.lexer.begin('INITIAL')
 
+    ### PALAVRAS RESERVADAS ###
     reserved = {
         'RECEBA' : 'RECEBA',
         'DEVOLVA' : 'DEVOLVA',
@@ -23,6 +24,7 @@ class HDS_Lexer ():
         'ZERO' : 'ZERO',
     }
 
+    ### TERMINAIS ###
     tokens = ('VARNAME','IGUAL','VIRGULA', 'LPAR', 'RPAR', 'NUM', 'OPARIT', 'OPLOG') + tuple(reserved.values())
 
     t_ignore = ' \t\n'
@@ -40,6 +42,7 @@ class HDS_Lexer ():
     t_OPARIT = r'\+|\*|-|/'
     t_OPLOG = r'>|<|>=|<='
 
+    ### TRATAMENTO DE ERRO ###
     def t_error(self, t):
         print("Invalid Token:",t.value[0])
         t.lexer.skip( 1 )
