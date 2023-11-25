@@ -12,22 +12,24 @@ class HDS_Lexer ():
                 'AQUIACABOU',
                 'ENQUANTO',
                 'FACA',
-                'FIM',
+                'FIMENQUANTO',
                 'SE',
                 'SENAO',
                 'ENTAO',
+                'FIMSE',
                 'ZERO',
                 'EXECUTE',
                 'VEZES',
                 'FIMEXE',
+                'FIM',
                 )
 
     ### TERMINAIS ###
-    tokens = ('VARNAME','IGUAL','VIRGULA', 'LPAR', 'RPAR', 'NUM', 'OPARIT', 'OPLOG', 'NEWLINE') + reserved
+    tokens = ('VARNAME','IGUAL','VIRGULA', 'LPAR', 'RPAR', 'NUM', 'OPARIT', 'OPLOG', 'OPLOGEQ', 'newline') + reserved
 
     t_ignore = ' ' + '\t'
 
-    def t_NEWLINE(self, t):
+    def t_newline(self, t):
         r'\n+'
         t.lexer.lineno += len(t.value)
 
@@ -38,13 +40,14 @@ class HDS_Lexer ():
 
         return t
     
+    t_OPLOG = r'>|<'
+    t_OPLOGEQ = r'>=|<='
     t_IGUAL = r'='
     t_VIRGULA = r','
     t_LPAR = r'\('
     t_RPAR = r'\)'
     t_NUM = r'[0-9]+'
     t_OPARIT = r'\+|\*|-|/'
-    t_OPLOG = r'>|<|>=|<='
 
     ### TRATAMENTO DE ERRO ###
     def t_error(self, t):

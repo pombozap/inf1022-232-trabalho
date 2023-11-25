@@ -10,6 +10,11 @@ class HDS_Parser ():
 
     tokens = HDS_Lexer.tokens
 
+    precedence = (
+        ('nonassoc', 'IGUAL'),
+        ('nonassoc', 'OPLOG', 'OPLOGEQ'),
+    )
+
     ### REGRAS GRAMATICAIS ###
     def p_programa (self, p):
         'expr : RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOU'
@@ -55,17 +60,29 @@ class HDS_Parser ():
         'cond : val OPLOG val'
         p[0] = '%s %s %s'%(p[1], p[2], p[3])
 
+    def p_condicao_logica_eq (self, p):
+        'cond : val OPLOGEQ val'
+        p[0] = '%s %s %s'%(p[1], p[2], p[3])
+
     def p_cmd_while_loop (self, p):
+        'cmd : ENQUANTO cond FACA cmds FIMENQUANTO'
+        p[0] = 'while %s:{\n%s}\n'%(p[2], p[4])
+
+    def p_cmd_while_loop_ANTIGO (self, p):
         'cmd : ENQUANTO cond FACA cmds FIM'
         p[0] = 'while %s:{\n%s}\n'%(p[2], p[4])
 
     def p_cmd_if_then (self, p):
-        'cmd : SE cond ENTAO cmds'
+        'cmd : SE cond ENTAO cmds FIMSE'
         p[0] = 'if %s:{\n%s}\n'%(p[2], p[4])
 
     def p_cmd_if_then_else (self, p):
-        'cmd : SE cond ENTAO cmds SENAO cmds'
+        'cmd : SE cond ENTAO cmds SENAO cmds FIMSE'
         p[0] = 'if %s:{\n%s}\nelse:{\n%s}\n'%(p[2], p[4], p[6])
+
+    def p_cmd_if_then_elif_then_else (self, p):
+        'cmd : SE cond ENTAO cmds SENAO SE cond ENTAO cmds FIMSE FIMSE'
+        p[0] = 'if %s:{\n%s}\nelif %s:{\n%s}\n'%(p[2], p[4], p[7], p[9])
 
     def p_cmds_for_loop (self, p):
         'cmd : EXECUTE NUM VEZES cmds FIMEXE'
@@ -120,7 +137,7 @@ class HDS_Parser ():
             |                                    |
             |         TRADUÇÃO ABORTADA.         |
             +------------------------------------+
-            """%(("ERRO DE FORMATAÇÃO NA LINHA %d:"%self.error.lineno).center(34), linhas[self.error.lineno-1], ' ' * pos_problema + '^' * len(self.error.value)))
+            """%(("ERRO DE TOKEN \"%s\" NA LINHA %d:"%(self.error.type,self.error.lineno)).center(34), linhas[self.error.lineno-1], ' ' * pos_problema + '^' * len(self.error.value)))
             return None
             
         else:
