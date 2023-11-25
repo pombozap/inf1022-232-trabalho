@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AQUIACABOU DEVOLVA ENQUANTO FACA FIM HORADOSHOW IGUAL RECEBA VARNAME VIRGULAexpr : RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOUvarlist : VARNAMEvarlist : VARNAME VIRGULA varlistcmds : cmdcmds : cmd cmdscmd : ENQUANTO VARNAME FACA cmds FIMcmd : VARNAME IGUAL VARNAME'
+_lr_signature = 'leftOPARITnonassocIGUALnonassocOPLOGOPLOGEQAQUIACABOU DEVOLVA ENQUANTO ENTAO EXECUTE FACA FIM FIMENQUANTO FIMEXE FIMSE HORADOSHOW IGUAL LPAR NUM OPARIT OPLOG OPLOGEQ RECEBA RPAR SE SENAO VARNAME VEZES VIRGULA ZERO newlineexpr : RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOUvarlist : VARNAMEvarlist : VARNAME VIRGULA varlistcmds : cmdcmds : cmd cmdsval : VARNAMEval : NUMval : LPAR val RPARval : val OPARIT valcond : valcond : val OPLOG valcond : val OPLOGEQ valcmd : ENQUANTO cond FACA cmds FIMENQUANTOcmd : ENQUANTO cond FACA cmds FIMcmd : SE cond ENTAO cmds FIMSEcmd : SE cond ENTAO cmds SENAO cmds FIMSEcmd : EXECUTE NUM VEZES cmds FIMEXEcmd : ZERO LPAR VARNAME RPARcmd : VARNAME IGUAL val'
     
-_lr_action_items = {'RECEBA':([0,],[2,]),'$end':([1,14,],[0,-1,]),'VARNAME':([2,5,6,9,11,12,17,18,19,21,],[4,4,4,13,13,16,19,13,-7,-6,]),'DEVOLVA':([3,4,8,],[5,-2,-3,]),'HORADOSHOW':([4,7,8,],[-2,9,-3,]),'VIRGULA':([4,],[6,]),'ENQUANTO':([9,11,18,19,21,],[12,12,12,-7,-6,]),'AQUIACABOU':([10,11,15,19,21,],[14,-4,-5,-7,-6,]),'FIM':([11,15,19,20,21,],[-4,-5,-7,21,-6,]),'IGUAL':([13,],[17,]),'FACA':([16,],[18,]),}
+_lr_action_items = {'RECEBA':([0,],[2,]),'$end':([1,17,],[0,-1,]),'VARNAME':([2,5,6,9,11,12,13,21,22,23,26,27,28,29,30,31,33,34,36,40,41,44,45,46,47,48,49,51,],[4,4,4,16,16,21,21,-6,-7,21,35,21,16,21,21,21,16,16,-19,-9,-8,-18,-13,-14,-15,16,-17,-16,]),'DEVOLVA':([3,4,8,],[5,-2,-3,]),'HORADOSHOW':([4,7,8,],[-2,9,-3,]),'VIRGULA':([4,],[6,]),'ENQUANTO':([9,11,21,22,28,33,34,36,40,41,44,45,46,47,48,49,51,],[12,12,-6,-7,12,12,12,-19,-9,-8,-18,-13,-14,-15,12,-17,-16,]),'SE':([9,11,21,22,28,33,34,36,40,41,44,45,46,47,48,49,51,],[13,13,-6,-7,13,13,13,-19,-9,-8,-18,-13,-14,-15,13,-17,-16,]),'EXECUTE':([9,11,21,22,28,33,34,36,40,41,44,45,46,47,48,49,51,],[14,14,-6,-7,14,14,14,-19,-9,-8,-18,-13,-14,-15,14,-17,-16,]),'ZERO':([9,11,21,22,28,33,34,36,40,41,44,45,46,47,48,49,51,],[15,15,-6,-7,15,15,15,-19,-9,-8,-18,-13,-14,-15,15,-17,-16,]),'AQUIACABOU':([10,11,18,21,22,36,40,41,44,45,46,47,49,51,],[17,-4,-5,-6,-7,-19,-9,-8,-18,-13,-14,-15,-17,-16,]),'FIMENQUANTO':([11,18,21,22,36,37,40,41,44,45,46,47,49,51,],[-4,-5,-6,-7,-19,45,-9,-8,-18,-13,-14,-15,-17,-16,]),'FIM':([11,18,21,22,36,37,40,41,44,45,46,47,49,51,],[-4,-5,-6,-7,-19,46,-9,-8,-18,-13,-14,-15,-17,-16,]),'FIMSE':([11,18,21,22,36,40,41,42,44,45,46,47,49,50,51,],[-4,-5,-6,-7,-19,-9,-8,47,-18,-13,-14,-15,-17,51,-16,]),'SENAO':([11,18,21,22,36,40,41,42,44,45,46,47,49,51,],[-4,-5,-6,-7,-19,-9,-8,48,-18,-13,-14,-15,-17,-16,]),'FIMEXE':([11,18,21,22,36,40,41,43,44,45,46,47,49,51,],[-4,-5,-6,-7,-19,-9,-8,49,-18,-13,-14,-15,-17,-16,]),'NUM':([12,13,14,23,27,29,30,31,],[22,22,25,22,22,22,22,22,]),'LPAR':([12,13,15,23,27,29,30,31,],[23,23,26,23,23,23,23,23,]),'IGUAL':([16,],[27,]),'FACA':([19,20,21,22,38,39,40,41,],[28,-10,-6,-7,-11,-12,-9,-8,]),'ENTAO':([20,21,22,24,38,39,40,41,],[-10,-6,-7,33,-11,-12,-9,-8,]),'OPLOG':([20,21,22,40,41,],[29,-6,-7,-9,-8,]),'OPLOGEQ':([20,21,22,40,41,],[30,-6,-7,-9,-8,]),'OPARIT':([20,21,22,32,36,38,39,40,41,],[31,-6,-7,31,31,31,31,-9,-8,]),'RPAR':([21,22,32,35,40,41,],[-6,-7,41,44,-9,-8,]),'VEZES':([25,],[34,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expr':([0,],[1,]),'varlist':([2,5,6,],[3,7,8,]),'cmds':([9,11,18,],[10,15,20,]),'cmd':([9,11,18,],[11,11,11,]),}
+_lr_goto_items = {'expr':([0,],[1,]),'varlist':([2,5,6,],[3,7,8,]),'cmds':([9,11,28,33,34,48,],[10,18,37,42,43,50,]),'cmd':([9,11,28,33,34,48,],[11,11,11,11,11,11,]),'cond':([12,13,],[19,24,]),'val':([12,13,23,27,29,30,31,],[20,20,32,36,38,39,40,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,11 +27,23 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expr","S'",1,None,None,None),
-  ('expr -> RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOU','expr',7,'p_programa','hds_parser.py',12),
-  ('varlist -> VARNAME','varlist',1,'p_variavel_unica','hds_parser.py',16),
-  ('varlist -> VARNAME VIRGULA varlist','varlist',3,'p_varias_variaveis','hds_parser.py',20),
-  ('cmds -> cmd','cmds',1,'p_comando_unico','hds_parser.py',24),
-  ('cmds -> cmd cmds','cmds',2,'p_varios_comandos','hds_parser.py',28),
-  ('cmd -> ENQUANTO VARNAME FACA cmds FIM','cmd',5,'p_cmd_while_loop','hds_parser.py',32),
-  ('cmd -> VARNAME IGUAL VARNAME','cmd',3,'p_cmd_atribuicao','hds_parser.py',36),
+  ('expr -> RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOU','expr',7,'p_programa','hds_parser.py',21),
+  ('varlist -> VARNAME','varlist',1,'p_variavel_unica','hds_parser.py',25),
+  ('varlist -> VARNAME VIRGULA varlist','varlist',3,'p_varias_variaveis','hds_parser.py',29),
+  ('cmds -> cmd','cmds',1,'p_comando_unico','hds_parser.py',33),
+  ('cmds -> cmd cmds','cmds',2,'p_varios_comandos','hds_parser.py',37),
+  ('val -> VARNAME','val',1,'p_val_variavel','hds_parser.py',41),
+  ('val -> NUM','val',1,'p_val_numero','hds_parser.py',45),
+  ('val -> LPAR val RPAR','val',3,'p_val_parenteses','hds_parser.py',49),
+  ('val -> val OPARIT val','val',3,'p_val_aritmetica','hds_parser.py',53),
+  ('cond -> val','cond',1,'p_condicao_valor','hds_parser.py',57),
+  ('cond -> val OPLOG val','cond',3,'p_condicao_logica','hds_parser.py',61),
+  ('cond -> val OPLOGEQ val','cond',3,'p_condicao_logica_eq','hds_parser.py',65),
+  ('cmd -> ENQUANTO cond FACA cmds FIMENQUANTO','cmd',5,'p_cmd_while_loop','hds_parser.py',69),
+  ('cmd -> ENQUANTO cond FACA cmds FIM','cmd',5,'p_cmd_while_loop_ANTIGO','hds_parser.py',73),
+  ('cmd -> SE cond ENTAO cmds FIMSE','cmd',5,'p_cmd_if_then','hds_parser.py',77),
+  ('cmd -> SE cond ENTAO cmds SENAO cmds FIMSE','cmd',7,'p_cmd_if_then_else','hds_parser.py',81),
+  ('cmd -> EXECUTE NUM VEZES cmds FIMEXE','cmd',5,'p_cmds_for_loop','hds_parser.py',85),
+  ('cmd -> ZERO LPAR VARNAME RPAR','cmd',4,'p_cmd_zero','hds_parser.py',89),
+  ('cmd -> VARNAME IGUAL val','cmd',3,'p_cmd_atribuicao','hds_parser.py',93),
 ]

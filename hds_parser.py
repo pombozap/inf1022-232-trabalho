@@ -11,6 +11,7 @@ class HDS_Parser ():
     tokens = HDS_Lexer.tokens
 
     precedence = (
+        ('left', 'OPARIT'),
         ('nonassoc', 'IGUAL'),
         ('nonassoc', 'OPLOG', 'OPLOGEQ'),
     )
@@ -79,10 +80,6 @@ class HDS_Parser ():
     def p_cmd_if_then_else (self, p):
         'cmd : SE cond ENTAO cmds SENAO cmds FIMSE'
         p[0] = 'if %s:{\n%s}\nelse:{\n%s}\n'%(p[2], p[4], p[6])
-
-    def p_cmd_if_then_elif_then_else (self, p):
-        'cmd : SE cond ENTAO cmds SENAO SE cond ENTAO cmds FIMSE FIMSE'
-        p[0] = 'if %s:{\n%s}\nelif %s:{\n%s}\n'%(p[2], p[4], p[7], p[9])
 
     def p_cmds_for_loop (self, p):
         'cmd : EXECUTE NUM VEZES cmds FIMEXE'

@@ -1,5 +1,9 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    newline
+
 Grammar
 
 Rule 0     S' -> expr
@@ -8,28 +12,58 @@ Rule 2     varlist -> VARNAME
 Rule 3     varlist -> VARNAME VIRGULA varlist
 Rule 4     cmds -> cmd
 Rule 5     cmds -> cmd cmds
-Rule 6     cmd -> ENQUANTO VARNAME FACA cmds FIM
-Rule 7     cmd -> VARNAME IGUAL VARNAME
+Rule 6     val -> VARNAME
+Rule 7     val -> NUM
+Rule 8     val -> LPAR val RPAR
+Rule 9     val -> val OPARIT val
+Rule 10    cond -> val
+Rule 11    cond -> val OPLOG val
+Rule 12    cond -> val OPLOGEQ val
+Rule 13    cmd -> ENQUANTO cond FACA cmds FIMENQUANTO
+Rule 14    cmd -> ENQUANTO cond FACA cmds FIM
+Rule 15    cmd -> SE cond ENTAO cmds FIMSE
+Rule 16    cmd -> SE cond ENTAO cmds SENAO cmds FIMSE
+Rule 17    cmd -> EXECUTE NUM VEZES cmds FIMEXE
+Rule 18    cmd -> ZERO LPAR VARNAME RPAR
+Rule 19    cmd -> VARNAME IGUAL val
 
 Terminals, with rules where they appear
 
 AQUIACABOU           : 1
 DEVOLVA              : 1
-ENQUANTO             : 6
-FACA                 : 6
-FIM                  : 6
+ENQUANTO             : 13 14
+ENTAO                : 15 16
+EXECUTE              : 17
+FACA                 : 13 14
+FIM                  : 14
+FIMENQUANTO          : 13
+FIMEXE               : 17
+FIMSE                : 15 16
 HORADOSHOW           : 1
-IGUAL                : 7
+IGUAL                : 19
+LPAR                 : 8 18
+NUM                  : 7 17
+OPARIT               : 9
+OPLOG                : 11
+OPLOGEQ              : 12
 RECEBA               : 1
-VARNAME              : 2 3 6 7 7
+RPAR                 : 8 18
+SE                   : 15 16
+SENAO                : 16
+VARNAME              : 2 3 6 18 19
+VEZES                : 17
 VIRGULA              : 3
+ZERO                 : 18
 error                : 
+newline              : 
 
 Nonterminals, with rules where they appear
 
 cmd                  : 4 5
-cmds                 : 1 5 6
+cmds                 : 1 5 13 14 15 16 16 17
+cond                 : 13 14 15 16
 expr                 : 0
+val                  : 8 9 9 10 11 11 12 12 19
 varlist              : 1 1 3
 
 Parsing method: LALR
@@ -116,11 +150,19 @@ state 9
     (1) expr -> RECEBA varlist DEVOLVA varlist HORADOSHOW . cmds AQUIACABOU
     (4) cmds -> . cmd
     (5) cmds -> . cmd cmds
-    (6) cmd -> . ENQUANTO VARNAME FACA cmds FIM
-    (7) cmd -> . VARNAME IGUAL VARNAME
+    (13) cmd -> . ENQUANTO cond FACA cmds FIMENQUANTO
+    (14) cmd -> . ENQUANTO cond FACA cmds FIM
+    (15) cmd -> . SE cond ENTAO cmds FIMSE
+    (16) cmd -> . SE cond ENTAO cmds SENAO cmds FIMSE
+    (17) cmd -> . EXECUTE NUM VEZES cmds FIMEXE
+    (18) cmd -> . ZERO LPAR VARNAME RPAR
+    (19) cmd -> . VARNAME IGUAL val
 
     ENQUANTO        shift and go to state 12
-    VARNAME         shift and go to state 13
+    SE              shift and go to state 13
+    EXECUTE         shift and go to state 14
+    ZERO            shift and go to state 15
+    VARNAME         shift and go to state 16
 
     cmds                           shift and go to state 10
     cmd                            shift and go to state 11
@@ -129,7 +171,7 @@ state 10
 
     (1) expr -> RECEBA varlist DEVOLVA varlist HORADOSHOW cmds . AQUIACABOU
 
-    AQUIACABOU      shift and go to state 14
+    AQUIACABOU      shift and go to state 17
 
 
 state 11
@@ -138,97 +180,591 @@ state 11
     (5) cmds -> cmd . cmds
     (4) cmds -> . cmd
     (5) cmds -> . cmd cmds
-    (6) cmd -> . ENQUANTO VARNAME FACA cmds FIM
-    (7) cmd -> . VARNAME IGUAL VARNAME
+    (13) cmd -> . ENQUANTO cond FACA cmds FIMENQUANTO
+    (14) cmd -> . ENQUANTO cond FACA cmds FIM
+    (15) cmd -> . SE cond ENTAO cmds FIMSE
+    (16) cmd -> . SE cond ENTAO cmds SENAO cmds FIMSE
+    (17) cmd -> . EXECUTE NUM VEZES cmds FIMEXE
+    (18) cmd -> . ZERO LPAR VARNAME RPAR
+    (19) cmd -> . VARNAME IGUAL val
 
     AQUIACABOU      reduce using rule 4 (cmds -> cmd .)
+    FIMENQUANTO     reduce using rule 4 (cmds -> cmd .)
     FIM             reduce using rule 4 (cmds -> cmd .)
+    FIMSE           reduce using rule 4 (cmds -> cmd .)
+    SENAO           reduce using rule 4 (cmds -> cmd .)
+    FIMEXE          reduce using rule 4 (cmds -> cmd .)
     ENQUANTO        shift and go to state 12
-    VARNAME         shift and go to state 13
+    SE              shift and go to state 13
+    EXECUTE         shift and go to state 14
+    ZERO            shift and go to state 15
+    VARNAME         shift and go to state 16
 
     cmd                            shift and go to state 11
-    cmds                           shift and go to state 15
+    cmds                           shift and go to state 18
 
 state 12
 
-    (6) cmd -> ENQUANTO . VARNAME FACA cmds FIM
+    (13) cmd -> ENQUANTO . cond FACA cmds FIMENQUANTO
+    (14) cmd -> ENQUANTO . cond FACA cmds FIM
+    (10) cond -> . val
+    (11) cond -> . val OPLOG val
+    (12) cond -> . val OPLOGEQ val
+    (6) val -> . VARNAME
+    (7) val -> . NUM
+    (8) val -> . LPAR val RPAR
+    (9) val -> . val OPARIT val
 
-    VARNAME         shift and go to state 16
+    VARNAME         shift and go to state 21
+    NUM             shift and go to state 22
+    LPAR            shift and go to state 23
 
+    cond                           shift and go to state 19
+    val                            shift and go to state 20
 
 state 13
 
-    (7) cmd -> VARNAME . IGUAL VARNAME
+    (15) cmd -> SE . cond ENTAO cmds FIMSE
+    (16) cmd -> SE . cond ENTAO cmds SENAO cmds FIMSE
+    (10) cond -> . val
+    (11) cond -> . val OPLOG val
+    (12) cond -> . val OPLOGEQ val
+    (6) val -> . VARNAME
+    (7) val -> . NUM
+    (8) val -> . LPAR val RPAR
+    (9) val -> . val OPARIT val
 
-    IGUAL           shift and go to state 17
+    VARNAME         shift and go to state 21
+    NUM             shift and go to state 22
+    LPAR            shift and go to state 23
 
+    cond                           shift and go to state 24
+    val                            shift and go to state 20
 
 state 14
+
+    (17) cmd -> EXECUTE . NUM VEZES cmds FIMEXE
+
+    NUM             shift and go to state 25
+
+
+state 15
+
+    (18) cmd -> ZERO . LPAR VARNAME RPAR
+
+    LPAR            shift and go to state 26
+
+
+state 16
+
+    (19) cmd -> VARNAME . IGUAL val
+
+    IGUAL           shift and go to state 27
+
+
+state 17
 
     (1) expr -> RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOU .
 
     $end            reduce using rule 1 (expr -> RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOU .)
 
 
-state 15
+state 18
 
     (5) cmds -> cmd cmds .
 
     AQUIACABOU      reduce using rule 5 (cmds -> cmd cmds .)
+    FIMENQUANTO     reduce using rule 5 (cmds -> cmd cmds .)
     FIM             reduce using rule 5 (cmds -> cmd cmds .)
+    FIMSE           reduce using rule 5 (cmds -> cmd cmds .)
+    SENAO           reduce using rule 5 (cmds -> cmd cmds .)
+    FIMEXE          reduce using rule 5 (cmds -> cmd cmds .)
 
-
-state 16
-
-    (6) cmd -> ENQUANTO VARNAME . FACA cmds FIM
-
-    FACA            shift and go to state 18
-
-
-state 17
-
-    (7) cmd -> VARNAME IGUAL . VARNAME
-
-    VARNAME         shift and go to state 19
-
-
-state 18
-
-    (6) cmd -> ENQUANTO VARNAME FACA . cmds FIM
-    (4) cmds -> . cmd
-    (5) cmds -> . cmd cmds
-    (6) cmd -> . ENQUANTO VARNAME FACA cmds FIM
-    (7) cmd -> . VARNAME IGUAL VARNAME
-
-    ENQUANTO        shift and go to state 12
-    VARNAME         shift and go to state 13
-
-    cmds                           shift and go to state 20
-    cmd                            shift and go to state 11
 
 state 19
 
-    (7) cmd -> VARNAME IGUAL VARNAME .
+    (13) cmd -> ENQUANTO cond . FACA cmds FIMENQUANTO
+    (14) cmd -> ENQUANTO cond . FACA cmds FIM
 
-    ENQUANTO        reduce using rule 7 (cmd -> VARNAME IGUAL VARNAME .)
-    VARNAME         reduce using rule 7 (cmd -> VARNAME IGUAL VARNAME .)
-    AQUIACABOU      reduce using rule 7 (cmd -> VARNAME IGUAL VARNAME .)
-    FIM             reduce using rule 7 (cmd -> VARNAME IGUAL VARNAME .)
+    FACA            shift and go to state 28
 
 
 state 20
 
-    (6) cmd -> ENQUANTO VARNAME FACA cmds . FIM
+    (10) cond -> val .
+    (11) cond -> val . OPLOG val
+    (12) cond -> val . OPLOGEQ val
+    (9) val -> val . OPARIT val
 
-    FIM             shift and go to state 21
+    FACA            reduce using rule 10 (cond -> val .)
+    ENTAO           reduce using rule 10 (cond -> val .)
+    OPLOG           shift and go to state 29
+    OPLOGEQ         shift and go to state 30
+    OPARIT          shift and go to state 31
 
 
 state 21
 
-    (6) cmd -> ENQUANTO VARNAME FACA cmds FIM .
+    (6) val -> VARNAME .
 
-    ENQUANTO        reduce using rule 6 (cmd -> ENQUANTO VARNAME FACA cmds FIM .)
-    VARNAME         reduce using rule 6 (cmd -> ENQUANTO VARNAME FACA cmds FIM .)
-    AQUIACABOU      reduce using rule 6 (cmd -> ENQUANTO VARNAME FACA cmds FIM .)
-    FIM             reduce using rule 6 (cmd -> ENQUANTO VARNAME FACA cmds FIM .)
+    OPLOG           reduce using rule 6 (val -> VARNAME .)
+    OPLOGEQ         reduce using rule 6 (val -> VARNAME .)
+    OPARIT          reduce using rule 6 (val -> VARNAME .)
+    FACA            reduce using rule 6 (val -> VARNAME .)
+    ENTAO           reduce using rule 6 (val -> VARNAME .)
+    RPAR            reduce using rule 6 (val -> VARNAME .)
+    ENQUANTO        reduce using rule 6 (val -> VARNAME .)
+    SE              reduce using rule 6 (val -> VARNAME .)
+    EXECUTE         reduce using rule 6 (val -> VARNAME .)
+    ZERO            reduce using rule 6 (val -> VARNAME .)
+    VARNAME         reduce using rule 6 (val -> VARNAME .)
+    AQUIACABOU      reduce using rule 6 (val -> VARNAME .)
+    FIMENQUANTO     reduce using rule 6 (val -> VARNAME .)
+    FIM             reduce using rule 6 (val -> VARNAME .)
+    FIMSE           reduce using rule 6 (val -> VARNAME .)
+    SENAO           reduce using rule 6 (val -> VARNAME .)
+    FIMEXE          reduce using rule 6 (val -> VARNAME .)
+
+
+state 22
+
+    (7) val -> NUM .
+
+    OPLOG           reduce using rule 7 (val -> NUM .)
+    OPLOGEQ         reduce using rule 7 (val -> NUM .)
+    OPARIT          reduce using rule 7 (val -> NUM .)
+    FACA            reduce using rule 7 (val -> NUM .)
+    ENTAO           reduce using rule 7 (val -> NUM .)
+    RPAR            reduce using rule 7 (val -> NUM .)
+    ENQUANTO        reduce using rule 7 (val -> NUM .)
+    SE              reduce using rule 7 (val -> NUM .)
+    EXECUTE         reduce using rule 7 (val -> NUM .)
+    ZERO            reduce using rule 7 (val -> NUM .)
+    VARNAME         reduce using rule 7 (val -> NUM .)
+    AQUIACABOU      reduce using rule 7 (val -> NUM .)
+    FIMENQUANTO     reduce using rule 7 (val -> NUM .)
+    FIM             reduce using rule 7 (val -> NUM .)
+    FIMSE           reduce using rule 7 (val -> NUM .)
+    SENAO           reduce using rule 7 (val -> NUM .)
+    FIMEXE          reduce using rule 7 (val -> NUM .)
+
+
+state 23
+
+    (8) val -> LPAR . val RPAR
+    (6) val -> . VARNAME
+    (7) val -> . NUM
+    (8) val -> . LPAR val RPAR
+    (9) val -> . val OPARIT val
+
+    VARNAME         shift and go to state 21
+    NUM             shift and go to state 22
+    LPAR            shift and go to state 23
+
+    val                            shift and go to state 32
+
+state 24
+
+    (15) cmd -> SE cond . ENTAO cmds FIMSE
+    (16) cmd -> SE cond . ENTAO cmds SENAO cmds FIMSE
+
+    ENTAO           shift and go to state 33
+
+
+state 25
+
+    (17) cmd -> EXECUTE NUM . VEZES cmds FIMEXE
+
+    VEZES           shift and go to state 34
+
+
+state 26
+
+    (18) cmd -> ZERO LPAR . VARNAME RPAR
+
+    VARNAME         shift and go to state 35
+
+
+state 27
+
+    (19) cmd -> VARNAME IGUAL . val
+    (6) val -> . VARNAME
+    (7) val -> . NUM
+    (8) val -> . LPAR val RPAR
+    (9) val -> . val OPARIT val
+
+    VARNAME         shift and go to state 21
+    NUM             shift and go to state 22
+    LPAR            shift and go to state 23
+
+    val                            shift and go to state 36
+
+state 28
+
+    (13) cmd -> ENQUANTO cond FACA . cmds FIMENQUANTO
+    (14) cmd -> ENQUANTO cond FACA . cmds FIM
+    (4) cmds -> . cmd
+    (5) cmds -> . cmd cmds
+    (13) cmd -> . ENQUANTO cond FACA cmds FIMENQUANTO
+    (14) cmd -> . ENQUANTO cond FACA cmds FIM
+    (15) cmd -> . SE cond ENTAO cmds FIMSE
+    (16) cmd -> . SE cond ENTAO cmds SENAO cmds FIMSE
+    (17) cmd -> . EXECUTE NUM VEZES cmds FIMEXE
+    (18) cmd -> . ZERO LPAR VARNAME RPAR
+    (19) cmd -> . VARNAME IGUAL val
+
+    ENQUANTO        shift and go to state 12
+    SE              shift and go to state 13
+    EXECUTE         shift and go to state 14
+    ZERO            shift and go to state 15
+    VARNAME         shift and go to state 16
+
+    cmds                           shift and go to state 37
+    cmd                            shift and go to state 11
+
+state 29
+
+    (11) cond -> val OPLOG . val
+    (6) val -> . VARNAME
+    (7) val -> . NUM
+    (8) val -> . LPAR val RPAR
+    (9) val -> . val OPARIT val
+
+    VARNAME         shift and go to state 21
+    NUM             shift and go to state 22
+    LPAR            shift and go to state 23
+
+    val                            shift and go to state 38
+
+state 30
+
+    (12) cond -> val OPLOGEQ . val
+    (6) val -> . VARNAME
+    (7) val -> . NUM
+    (8) val -> . LPAR val RPAR
+    (9) val -> . val OPARIT val
+
+    VARNAME         shift and go to state 21
+    NUM             shift and go to state 22
+    LPAR            shift and go to state 23
+
+    val                            shift and go to state 39
+
+state 31
+
+    (9) val -> val OPARIT . val
+    (6) val -> . VARNAME
+    (7) val -> . NUM
+    (8) val -> . LPAR val RPAR
+    (9) val -> . val OPARIT val
+
+    VARNAME         shift and go to state 21
+    NUM             shift and go to state 22
+    LPAR            shift and go to state 23
+
+    val                            shift and go to state 40
+
+state 32
+
+    (8) val -> LPAR val . RPAR
+    (9) val -> val . OPARIT val
+
+    RPAR            shift and go to state 41
+    OPARIT          shift and go to state 31
+
+
+state 33
+
+    (15) cmd -> SE cond ENTAO . cmds FIMSE
+    (16) cmd -> SE cond ENTAO . cmds SENAO cmds FIMSE
+    (4) cmds -> . cmd
+    (5) cmds -> . cmd cmds
+    (13) cmd -> . ENQUANTO cond FACA cmds FIMENQUANTO
+    (14) cmd -> . ENQUANTO cond FACA cmds FIM
+    (15) cmd -> . SE cond ENTAO cmds FIMSE
+    (16) cmd -> . SE cond ENTAO cmds SENAO cmds FIMSE
+    (17) cmd -> . EXECUTE NUM VEZES cmds FIMEXE
+    (18) cmd -> . ZERO LPAR VARNAME RPAR
+    (19) cmd -> . VARNAME IGUAL val
+
+    ENQUANTO        shift and go to state 12
+    SE              shift and go to state 13
+    EXECUTE         shift and go to state 14
+    ZERO            shift and go to state 15
+    VARNAME         shift and go to state 16
+
+    cmds                           shift and go to state 42
+    cmd                            shift and go to state 11
+
+state 34
+
+    (17) cmd -> EXECUTE NUM VEZES . cmds FIMEXE
+    (4) cmds -> . cmd
+    (5) cmds -> . cmd cmds
+    (13) cmd -> . ENQUANTO cond FACA cmds FIMENQUANTO
+    (14) cmd -> . ENQUANTO cond FACA cmds FIM
+    (15) cmd -> . SE cond ENTAO cmds FIMSE
+    (16) cmd -> . SE cond ENTAO cmds SENAO cmds FIMSE
+    (17) cmd -> . EXECUTE NUM VEZES cmds FIMEXE
+    (18) cmd -> . ZERO LPAR VARNAME RPAR
+    (19) cmd -> . VARNAME IGUAL val
+
+    ENQUANTO        shift and go to state 12
+    SE              shift and go to state 13
+    EXECUTE         shift and go to state 14
+    ZERO            shift and go to state 15
+    VARNAME         shift and go to state 16
+
+    cmds                           shift and go to state 43
+    cmd                            shift and go to state 11
+
+state 35
+
+    (18) cmd -> ZERO LPAR VARNAME . RPAR
+
+    RPAR            shift and go to state 44
+
+
+state 36
+
+    (19) cmd -> VARNAME IGUAL val .
+    (9) val -> val . OPARIT val
+
+    ENQUANTO        reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    SE              reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    EXECUTE         reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    ZERO            reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    VARNAME         reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    AQUIACABOU      reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    FIMENQUANTO     reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    FIM             reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    FIMSE           reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    SENAO           reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    FIMEXE          reduce using rule 19 (cmd -> VARNAME IGUAL val .)
+    OPARIT          shift and go to state 31
+
+
+state 37
+
+    (13) cmd -> ENQUANTO cond FACA cmds . FIMENQUANTO
+    (14) cmd -> ENQUANTO cond FACA cmds . FIM
+
+    FIMENQUANTO     shift and go to state 45
+    FIM             shift and go to state 46
+
+
+state 38
+
+    (11) cond -> val OPLOG val .
+    (9) val -> val . OPARIT val
+
+    FACA            reduce using rule 11 (cond -> val OPLOG val .)
+    ENTAO           reduce using rule 11 (cond -> val OPLOG val .)
+    OPARIT          shift and go to state 31
+
+
+state 39
+
+    (12) cond -> val OPLOGEQ val .
+    (9) val -> val . OPARIT val
+
+    FACA            reduce using rule 12 (cond -> val OPLOGEQ val .)
+    ENTAO           reduce using rule 12 (cond -> val OPLOGEQ val .)
+    OPARIT          shift and go to state 31
+
+
+state 40
+
+    (9) val -> val OPARIT val .
+    (9) val -> val . OPARIT val
+
+    OPLOG           reduce using rule 9 (val -> val OPARIT val .)
+    OPLOGEQ         reduce using rule 9 (val -> val OPARIT val .)
+    OPARIT          reduce using rule 9 (val -> val OPARIT val .)
+    FACA            reduce using rule 9 (val -> val OPARIT val .)
+    ENTAO           reduce using rule 9 (val -> val OPARIT val .)
+    RPAR            reduce using rule 9 (val -> val OPARIT val .)
+    ENQUANTO        reduce using rule 9 (val -> val OPARIT val .)
+    SE              reduce using rule 9 (val -> val OPARIT val .)
+    EXECUTE         reduce using rule 9 (val -> val OPARIT val .)
+    ZERO            reduce using rule 9 (val -> val OPARIT val .)
+    VARNAME         reduce using rule 9 (val -> val OPARIT val .)
+    AQUIACABOU      reduce using rule 9 (val -> val OPARIT val .)
+    FIMENQUANTO     reduce using rule 9 (val -> val OPARIT val .)
+    FIM             reduce using rule 9 (val -> val OPARIT val .)
+    FIMSE           reduce using rule 9 (val -> val OPARIT val .)
+    SENAO           reduce using rule 9 (val -> val OPARIT val .)
+    FIMEXE          reduce using rule 9 (val -> val OPARIT val .)
+
+  ! OPARIT          [ shift and go to state 31 ]
+
+
+state 41
+
+    (8) val -> LPAR val RPAR .
+
+    OPLOG           reduce using rule 8 (val -> LPAR val RPAR .)
+    OPLOGEQ         reduce using rule 8 (val -> LPAR val RPAR .)
+    OPARIT          reduce using rule 8 (val -> LPAR val RPAR .)
+    FACA            reduce using rule 8 (val -> LPAR val RPAR .)
+    ENTAO           reduce using rule 8 (val -> LPAR val RPAR .)
+    RPAR            reduce using rule 8 (val -> LPAR val RPAR .)
+    ENQUANTO        reduce using rule 8 (val -> LPAR val RPAR .)
+    SE              reduce using rule 8 (val -> LPAR val RPAR .)
+    EXECUTE         reduce using rule 8 (val -> LPAR val RPAR .)
+    ZERO            reduce using rule 8 (val -> LPAR val RPAR .)
+    VARNAME         reduce using rule 8 (val -> LPAR val RPAR .)
+    AQUIACABOU      reduce using rule 8 (val -> LPAR val RPAR .)
+    FIMENQUANTO     reduce using rule 8 (val -> LPAR val RPAR .)
+    FIM             reduce using rule 8 (val -> LPAR val RPAR .)
+    FIMSE           reduce using rule 8 (val -> LPAR val RPAR .)
+    SENAO           reduce using rule 8 (val -> LPAR val RPAR .)
+    FIMEXE          reduce using rule 8 (val -> LPAR val RPAR .)
+
+
+state 42
+
+    (15) cmd -> SE cond ENTAO cmds . FIMSE
+    (16) cmd -> SE cond ENTAO cmds . SENAO cmds FIMSE
+
+    FIMSE           shift and go to state 47
+    SENAO           shift and go to state 48
+
+
+state 43
+
+    (17) cmd -> EXECUTE NUM VEZES cmds . FIMEXE
+
+    FIMEXE          shift and go to state 49
+
+
+state 44
+
+    (18) cmd -> ZERO LPAR VARNAME RPAR .
+
+    ENQUANTO        reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    SE              reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    EXECUTE         reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    ZERO            reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    VARNAME         reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    AQUIACABOU      reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    FIMENQUANTO     reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    FIM             reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    FIMSE           reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    SENAO           reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+    FIMEXE          reduce using rule 18 (cmd -> ZERO LPAR VARNAME RPAR .)
+
+
+state 45
+
+    (13) cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .
+
+    ENQUANTO        reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    SE              reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    EXECUTE         reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    ZERO            reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    VARNAME         reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    AQUIACABOU      reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    FIMENQUANTO     reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    FIM             reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    FIMSE           reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    SENAO           reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+    FIMEXE          reduce using rule 13 (cmd -> ENQUANTO cond FACA cmds FIMENQUANTO .)
+
+
+state 46
+
+    (14) cmd -> ENQUANTO cond FACA cmds FIM .
+
+    ENQUANTO        reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    SE              reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    EXECUTE         reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    ZERO            reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    VARNAME         reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    AQUIACABOU      reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    FIMENQUANTO     reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    FIM             reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    FIMSE           reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    SENAO           reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+    FIMEXE          reduce using rule 14 (cmd -> ENQUANTO cond FACA cmds FIM .)
+
+
+state 47
+
+    (15) cmd -> SE cond ENTAO cmds FIMSE .
+
+    ENQUANTO        reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    SE              reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    EXECUTE         reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    ZERO            reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    VARNAME         reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    AQUIACABOU      reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    FIMENQUANTO     reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    FIM             reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    FIMSE           reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    SENAO           reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+    FIMEXE          reduce using rule 15 (cmd -> SE cond ENTAO cmds FIMSE .)
+
+
+state 48
+
+    (16) cmd -> SE cond ENTAO cmds SENAO . cmds FIMSE
+    (4) cmds -> . cmd
+    (5) cmds -> . cmd cmds
+    (13) cmd -> . ENQUANTO cond FACA cmds FIMENQUANTO
+    (14) cmd -> . ENQUANTO cond FACA cmds FIM
+    (15) cmd -> . SE cond ENTAO cmds FIMSE
+    (16) cmd -> . SE cond ENTAO cmds SENAO cmds FIMSE
+    (17) cmd -> . EXECUTE NUM VEZES cmds FIMEXE
+    (18) cmd -> . ZERO LPAR VARNAME RPAR
+    (19) cmd -> . VARNAME IGUAL val
+
+    ENQUANTO        shift and go to state 12
+    SE              shift and go to state 13
+    EXECUTE         shift and go to state 14
+    ZERO            shift and go to state 15
+    VARNAME         shift and go to state 16
+
+    cmds                           shift and go to state 50
+    cmd                            shift and go to state 11
+
+state 49
+
+    (17) cmd -> EXECUTE NUM VEZES cmds FIMEXE .
+
+    ENQUANTO        reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    SE              reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    EXECUTE         reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    ZERO            reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    VARNAME         reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    AQUIACABOU      reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    FIMENQUANTO     reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    FIM             reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    FIMSE           reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    SENAO           reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+    FIMEXE          reduce using rule 17 (cmd -> EXECUTE NUM VEZES cmds FIMEXE .)
+
+
+state 50
+
+    (16) cmd -> SE cond ENTAO cmds SENAO cmds . FIMSE
+
+    FIMSE           shift and go to state 51
+
+
+state 51
+
+    (16) cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .
+
+    ENQUANTO        reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    SE              reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    EXECUTE         reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    ZERO            reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    VARNAME         reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    AQUIACABOU      reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    FIMENQUANTO     reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    FIM             reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    FIMSE           reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    SENAO           reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
+    FIMEXE          reduce using rule 16 (cmd -> SE cond ENTAO cmds SENAO cmds FIMSE .)
 
