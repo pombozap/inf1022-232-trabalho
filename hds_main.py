@@ -7,7 +7,10 @@ input_string = input_file.read()
 input_file.close()
 
 python_code = parser.parse(input_string)
+if python_code == "":
+    print("ERRO NA TRADUÇÃO. PROGRAMA ABORTADO.")
 
-output_file = open("func.py", "w")
-output_file.write(python_code)
-output_file.close()
+else:
+    output_file = open("func.py", "w")
+    output_file.write(python_code)
+    output_file.close()
