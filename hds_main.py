@@ -1,5 +1,13 @@
 from hds_parser import HDS_Parser
 
+mensagem_sucesso = """
+    +------------------------------------+
+    |    TRADUÇÃO TERMINADA COM ÊXITO.   |
+    |                                    |
+    |      DISPONÍVEL EM "./func.py"     |
+    +------------------------------------+
+"""
+
 parser = HDS_Parser()
 
 input_file = open("func.show", "r")
@@ -12,10 +20,4 @@ if python_code != None:
     output_file = open("func.py", "w")
     output_file.write(python_code)
     output_file.close()
-    print("""
-            +------------------------------------+
-            |    TRADUÇÃO TERMINADA COM ÊXITO.   |
-            |                                    |
-            |       DISPONÍVEL EM "func.py"      |
-            +------------------------------------+
-            """)
+    print(mensagem_sucesso)

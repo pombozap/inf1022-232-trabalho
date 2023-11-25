@@ -4,6 +4,7 @@ class HDS_Lexer ():
     def __init__(self):
         self.lexer = lex.lex(module=self)
         self.lexer.begin('INITIAL')
+        self.linestart = [0]
 
     ### PALAVRAS RESERVADAS ###
     reserved = ('RECEBA',
@@ -29,9 +30,10 @@ class HDS_Lexer ():
 
     t_ignore = ' ' + '\t'
 
-    def t_newline(self, t):
-        r'\n+'
-        t.lexer.lineno += len(t.value)
+    def t_newline(self, t): # Regra ainda ignora newlines, só conta eles para imprimir erro
+        r'\n'
+        self.linestart.append(t.lexpos + 1)
+        t.lexer.lineno += 1
 
     def t_VARNAME(self, t):
         r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -51,5 +53,6 @@ class HDS_Lexer ():
 
     ### TRATAMENTO DE ERRO ###
     def t_error(self, t):
-        print(">>> Caractere inválido lido:",t.value[0])
+        print(">>> AVISO!  Caractere inválido \'%c\' lido na linha %d (col=%d) e considerado como espaço."%(t.value[0], t.lineno, t.lexpos-self.linestart[t.lineno-1]))
+
         t.lexer.skip(1)
