@@ -1,10 +1,12 @@
 from ply import yacc
 from hds_lexer import *
+import re
 
 class HDS_Parser ():
     def __init__(self):
         self.parser = yacc.yacc(module=self)
         self.lexer = HDS_Lexer()
+        self.error = None
 
     tokens = HDS_Lexer.tokens
 
@@ -79,8 +81,7 @@ class HDS_Parser ():
 
     ### TRATAMENTO DE ERRO ###
     def p_error(self, p):
-        print("Erro de sintaxe no input!")
-        print(p)
+        self.error = p
 
     ### GERAÇÃO DE CÓDIGO PYTHON ###
     def gera_indentacao (self, codigo_sem_indentacao):
@@ -101,5 +102,27 @@ class HDS_Parser ():
     
     ### FUNÇÃO FINAL ###
     def parse(self, codigo_show):
-        return self.gera_indentacao(self.parser.parse(codigo_show))
+        codigo_python_sem_indentacao = self.parser.parse(codigo_show)
+
+        if self.error != None:
+            linhas = codigo_show.splitlines()
+            pos_problema = self.error.lexpos
+            
+            for line in linhas[:self.error.lineno-1]:
+                pos_problema -= len(line) + 1
+
+            print("""
+            +------------------------------------+
+            | %s |
+            |                                    |
+            | %-34s |
+            | %-34s |
+            |                                    |
+            |         TRADUÇÃO ABORTADA.         |
+            +------------------------------------+
+            """%(("ERRO DE FORMATAÇÃO NA LINHA %d:"%self.error.lineno).center(34), linhas[self.error.lineno-1], ' ' * pos_problema + '^' * len(self.error.value)))
+            return None
+            
+        else:
+            return self.gera_indentacao(codigo_python_sem_indentacao)
 
