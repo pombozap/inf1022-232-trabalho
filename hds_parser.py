@@ -1,6 +1,5 @@
 from ply import yacc
 from hds_lexer import *
-import re
 
 class HDS_Parser ():
     def __init__(self):
@@ -19,7 +18,29 @@ class HDS_Parser ():
     ### REGRAS GRAMATICAIS ###
     def p_programa (self, p):
         'expr : RECEBA varlist DEVOLVA varlist HORADOSHOW cmds AQUIACABOU'
-        p[0] = 'def func(%s):{\n%s\nreturn %s}\n'%(p[2], p[6], p[4])
+        p[0] = """import sys
+
+### funcao traduzida do .show ###
+def programa(%s):{
+%s
+return (%s,)}
+
+### leitura dos argumentos do terminal ###
+args = ()
+for i in sys.argv[1:]:
+	args += (int(i),)
+
+(%s,) = args
+
+### rodando o programa ###
+output = programa(%s)
+
+### imprimindo os valores das saidas rotulados no terminal ###
+varnames = '%s'.replace(' ','').replace('\\n','').replace('\\t','').split(',')
+for i in range(len(varnames)):
+	print(varnames[i], '=', output[i])
+
+"""%(p[2], p[6], p[4], p[2], p[2], p[4])
 
     def p_variavel_unica (self, p):
         'varlist : VARNAME'
@@ -115,15 +136,19 @@ class HDS_Parser ():
         return codigo_python
     
     def gera_mensagem_erro(self, linha_com_erro):
-        largura_caixa = max(35, len(linha_com_erro))
+        token_inesperada = "Token %s inesperada na linha %d:"%(self.error.type, self.error.lineno)
+        largura_caixa = max(len(token_inesperada), len(linha_com_erro), 62)
         pos_erro_na_linha = self.error.lexpos - self.lexer.linestart[self.error.lineno-1]
 
-        mensagem = """\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"""%(
+        mensagem = """\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    > %s <\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"""%(
             '-' * largura_caixa,
-            ("ERRO DE TOKEN %s NA LINHA %d:"%(self.error.type, self.error.lineno)).center(largura_caixa),
+            'ERRO'.center(largura_caixa, ' '),
+            token_inesperada.center(largura_caixa),
             ' ' * largura_caixa,
             linha_com_erro.ljust(largura_caixa, ' '),
             (' ' * pos_erro_na_linha + '^' * len(self.error.value)).ljust(largura_caixa, ' '),
+            ' ' * largura_caixa,
+            "Cheque também se a palavra anterior está escrita corretamente.".center(largura_caixa, ' '),
             ' ' * largura_caixa,
             "TRADUÇÃO ABORTADA.".center(largura_caixa),
             '-' * largura_caixa
@@ -131,17 +156,41 @@ class HDS_Parser ():
 
         return mensagem
 
+    def gera_mensagem_erro_final (self, linha_com_erro):
+        ultima_palavra = linha_com_erro.split()[-1]
+        token_inesperada = "Certifique-se de terminar com \"AQUIACABOU\""
+        largura_caixa = max(len(token_inesperada), len(linha_com_erro))
+        pos_erro_na_linha = len(linha_com_erro) - len(ultima_palavra)
+
+        mensagem = """\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    > %s <\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"""%(
+            '-' * largura_caixa,
+            'ERRO'.center(largura_caixa, ' '),
+            token_inesperada.center(largura_caixa),
+            ' ' * largura_caixa,
+            linha_com_erro.ljust(largura_caixa, ' '),
+            (' ' * pos_erro_na_linha + '^' * len(ultima_palavra)).ljust(largura_caixa, ' '),
+            ' ' * largura_caixa,
+            "TRADUÇÃO ABORTADA.".center(largura_caixa),
+            '-' * largura_caixa
+        )
+
+        return mensagem
+    
     ### FUNÇÃO FINAL ###
     def parse(self, codigo_show):
         codigo_python_sem_indentacao = self.parser.parse(codigo_show)
-        if self.error != None:
+        if codigo_python_sem_indentacao == None:
             linhas = codigo_show.splitlines()
-            linha_com_erro = linhas[self.error.lineno-1]
 
-            print(self.gera_mensagem_erro(linha_com_erro))
-            
+            if self.error == None:
+                print(self.gera_mensagem_erro_final(linhas[-1]))
+
+            else:
+                linha_com_erro = linhas[self.error.lineno-1]
+                print(self.gera_mensagem_erro(linha_com_erro))
+
             return None
-            
+
         else:
             return self.gera_indentacao(codigo_python_sem_indentacao)
 
