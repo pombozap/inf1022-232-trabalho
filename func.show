@@ -1,21 +1,18 @@
-RECEBA X
-DEVOLVA Z
+RECEBA X, Y
+DEVOLVA A, B, C
 
 HORADOSHOW
-ZERO(X)
-RESULT=NUM
-ENQUANTO X>NUM FACA NUM=1+NUM
+ZERO(Z)
+B = Y
+C = X
 EXECUTE 5 VEZES
-    RESULT = RESULT + NUM
+    Z = Z + 1
+    SE Z > 2 
+        ENTAO B = B + 1
+        SENAO C = C * 2
+    FIMSE
 FIMEXE
-RESULT = RESULT*NUM
-SE X>=NUM
-    ENTAO X=NUM
-SENAO SE X>NUM 
-                            ENTAO X=500  
-                    SENAO SE                               X>500 ENTAO X = 500 FIMSE 
-FIMSE FIMESE
-Z=                                            RESULT
-FIMENQUANTO
+ZERO(A)
+ENQUANTO A <= 10 FACA A = A + 1 FIMENQUANTO
 
 AQUIACABOU

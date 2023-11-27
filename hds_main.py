@@ -21,12 +21,12 @@ def get_file_name (extension, tipo):
 
 def check_file_exists (file_name):
     if path.isfile(file_name):
-        largura_caixa = max(29, 2 + len(file_name))
+        largura_caixa = max(29, len(file_name))
         mensagem_sucesso = "\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"%(
             '-' * largura_caixa,
             'ARQUIVO .show ENCONTRADO:'.center(largura_caixa, ' '),
             ' ' * largura_caixa,
-            ('\"%s\"'%file_name).center(largura_caixa, ' '),
+            file_name.center(largura_caixa, ' '),
             '-' * largura_caixa,
         )
         print(mensagem_sucesso)
@@ -38,7 +38,7 @@ def check_file_exists (file_name):
             '-' * largura_caixa,
             'ERRO:'.center(largura_caixa, ' '),
             ' ' * largura_caixa,
-            'ARQUIVO \"%s\" NÃO EXISTE.'%file_name,
+            'ARQUIVO %s NÃO EXISTE.'%file_name,
             '-' * largura_caixa,
         )
         print(mensagem_erro)
@@ -69,6 +69,8 @@ else:
     mensagem_sucesso = """
     +-------------------------------+
     | TRADUÇÃO TERMINADA COM ÊXITO. |
+    |                               |
+    |  ESCOLHA O ARQUIVO DE SAÍDA.  |
     +-------------------------------+
     """
     print(mensagem_sucesso)
@@ -82,7 +84,7 @@ output_file.close()
 largura_caixa = max(29, len(output_file_name))
 mensagem_final = "\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"%(
         '-' * largura_caixa,
-        "DISPONÍVEL EM:".center(largura_caixa, ' '),
+        "PROGRAMA GRAVADO EM:".center(largura_caixa, ' '),
         ' ' * largura_caixa,
         output_file_name.center(largura_caixa, ' '),
         '-' * largura_caixa

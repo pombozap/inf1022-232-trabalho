@@ -136,17 +136,19 @@ for i in range(len(varnames)):
         return codigo_python
     
     def gera_mensagem_erro(self, linha_com_erro):
-        token_inesperada = "TOKEN %s INESPERADA NA LINHA %d:"%(self.error.type, self.error.lineno)
-        largura_caixa = max(len(token_inesperada), len(linha_com_erro))
+        token_inesperada = "Token %s inesperada na linha %d:"%(self.error.type, self.error.lineno)
+        largura_caixa = max(len(token_inesperada), len(linha_com_erro), 62)
         pos_erro_na_linha = self.error.lexpos - self.lexer.linestart[self.error.lineno-1]
 
-        mensagem = """\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"""%(
+        mensagem = """\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    > %s <\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"""%(
             '-' * largura_caixa,
-            'ERRO:'.center(largura_caixa, ' '),
+            'ERRO'.center(largura_caixa, ' '),
             token_inesperada.center(largura_caixa),
             ' ' * largura_caixa,
             linha_com_erro.ljust(largura_caixa, ' '),
             (' ' * pos_erro_na_linha + '^' * len(self.error.value)).ljust(largura_caixa, ' '),
+            ' ' * largura_caixa,
+            "Cheque também se a palavra anterior está escrita corretamente.".center(largura_caixa, ' '),
             ' ' * largura_caixa,
             "TRADUÇÃO ABORTADA.".center(largura_caixa),
             '-' * largura_caixa
@@ -156,13 +158,13 @@ for i in range(len(varnames)):
 
     def gera_mensagem_erro_final (self, linha_com_erro):
         ultima_palavra = linha_com_erro.split()[-1]
-        token_inesperada = "CERTIFIQUE-SE DE ACABAR COM \"AQUIACABOU\""
+        token_inesperada = "Certifique-se de terminar com \"AQUIACABOU\""
         largura_caixa = max(len(token_inesperada), len(linha_com_erro))
         pos_erro_na_linha = len(linha_com_erro) - len(ultima_palavra)
 
-        mensagem = """\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"""%(
+        mensagem = """\n    +-%s-+\n    | %s |\n    | %s |\n    | %s |\n    > %s <\n    | %s |\n    | %s |\n    | %s |\n    +-%s-+\n"""%(
             '-' * largura_caixa,
-            'ERRO:'.center(largura_caixa, ' '),
+            'ERRO'.center(largura_caixa, ' '),
             token_inesperada.center(largura_caixa),
             ' ' * largura_caixa,
             linha_com_erro.ljust(largura_caixa, ' '),
@@ -181,10 +183,6 @@ for i in range(len(varnames)):
             linhas = codigo_show.splitlines()
 
             if self.error == None:
-                print(linhas)
-                print(linhas[-1])
-                print(linhas[-1].split())
-                print(linhas[-1].split()[-1])
                 print(self.gera_mensagem_erro_final(linhas[-1]))
 
             else:
